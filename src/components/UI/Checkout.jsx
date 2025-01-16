@@ -1,6 +1,6 @@
 import CartContext from "../../Store/CartContext"
 import Modal from "./Modal"
-import { useContext } from "react"
+import { useContext, useActionState } from "react"
 import { currencyFormatter } from "../../util/formatting";
 import Input from "./Input";
 import UserProgressContext from "../../Store/userProgressContext";
@@ -21,7 +21,6 @@ export default function Checkout() {
   const userProgressCtx = useContext(UserProgressContext);
 
   const { data,
-      isLoading: isSending,
       error,
       sendRequest,
       clearData
@@ -41,7 +40,7 @@ export default function Checkout() {
     clearData();
   }
 
-   async function checkoutAction(fd) {
+   async function checkoutAction(prevState,fd) {
 
     const customerData = Object.fromEntries(fd.entries());
 
@@ -55,6 +54,8 @@ export default function Checkout() {
     );
   }
 
+
+  const [formState, formAction, isSending]=useActionState(checkoutAction,null);
   let action = (
     <>
       <Button type='button' textOnly onClick={handleClose}>
